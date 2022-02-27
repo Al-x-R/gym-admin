@@ -5,9 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { WorkoutEntity } from './workout.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([WorkoutEntity])],
-    controllers: [WorkoutController],
-    providers: [WorkoutService]
+  imports: [TypeOrmModule.forFeature([WorkoutEntity])],
+  controllers: [WorkoutController],
+  providers: [WorkoutService]
 })
-export class WorkoutModule {
-}
+export class WorkoutModule {}
