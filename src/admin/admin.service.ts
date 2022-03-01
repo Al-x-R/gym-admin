@@ -1,8 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAdminDto } from './dto/createAdmin.dto';
-import { AdminEntity } from './admin.entity';
-import { InjectRepository } from '@nestjs/typeorm';
+import { compare } from 'bcryptjs';
+import { sign } from 'jsonwebtoken';
 import { Repository } from 'typeorm';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { AdminDto } from './dto/admin.dto';
+import { AdminEntity } from './admin.entity';
+import { AdminLoginDto } from './dto/adminLogin.dto';
+import { AdminLoginResponseInterface } from './types/adminLoginResponse.interface';
 
 @Injectable()
 export class AdminService {
@@ -12,10 +17,62 @@ export class AdminService {
     ) {
     }
 
-    async createAdmin(createAdminDto: CreateAdminDto) {
+    async createAdmin(adminDto: AdminDto) {
         const newAdmin = new AdminEntity();
-        Object.assign(newAdmin, createAdminDto);
+        Object.assign(newAdmin, adminDto);
 
         return this.adminRepository.save(newAdmin);
     }
+
+    async login(adminLoginDto: AdminLoginDto) {
+      const errorResponse = {
+        errors: {
+          'email or password': 'is invalid',
+        },
+      };
+
+      const admin = await this.adminRepository.findOne({
+        adminName: adminLoginDto.adminName
+      },
+        { select: ['id', 'adminName', 'password', 'isSuper'] },
+        )
+
+      if (!admin) {
+        throw new HttpException(errorResponse, HttpStatus.UNPROCESSABLE_ENTITY);
+      }
+
+      const isPasswordCorrect = await compare(
+        adminLoginDto.password,
+        admin.password,
+      );
+
+      if (!isPasswordCorrect) {
+        throw new HttpException(errorResponse, HttpStatus.UNPROCESSABLE_ENTITY);
+      }
+
+
+      // @ts-ignore //TODO @ts-ignore delete admin.password;
+      delete admin.password;
+      return admin
+    }
+
+    generateJwt(admin: AdminEntity): string {
+        return sign(
+          {
+              id: admin.id,
+              adminName: admin.adminName,
+              isSuper: admin.isSuper,
+          },
+          process.env.JWT_SECRET,
+        );
+    }
+
+  buildAdminResponse(admin: AdminEntity): AdminLoginResponseInterface {
+    return {
+      admin: {
+        ...admin,
+        token: this.generateJwt(admin),
+      },
+    };
+  }
 }

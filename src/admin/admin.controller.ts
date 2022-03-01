@@ -1,6 +1,10 @@
 import { Body, Controller, Post } from '@nestjs/common';
+
+import { AdminDto } from './dto/admin.dto';
+import { AdminEntity } from './admin.entity';
 import { AdminService } from './admin.service';
-import { CreateAdminDto } from './dto/createAdmin.dto';
+import { AdminLoginDto } from './dto/adminLogin.dto';
+import { AdminLoginResponseInterface } from './types/adminLoginResponse.interface';
 
 @Controller()
 export class AdminController {
@@ -8,8 +12,14 @@ export class AdminController {
     }
 
     @Post('admin')
-    async createAdmin(@Body('admin') createAdminDto: CreateAdminDto): Promise<any> {
+    async createAdmin(@Body('admin') adminDto: AdminDto): Promise<AdminEntity> {
+        return await this.adminService.createAdmin(adminDto);
+    }
 
-        return await this.adminService.createAdmin(createAdminDto);
+    @Post('login')
+    async adminLogin(@Body('admin') adminLoginDto: AdminLoginDto): Promise<AdminLoginResponseInterface> {
+        const admin = await this.adminService.login(adminLoginDto)
+
+        return this.adminService.buildAdminResponse(admin)
     }
 }
