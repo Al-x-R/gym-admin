@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 
 import { AdminDto } from './dto/admin.dto';
 import { AdminEntity } from './admin.entity';
@@ -12,11 +12,13 @@ export class AdminController {
     }
 
     @Post('admin')
+    @UsePipes(new ValidationPipe())
     async createAdmin(@Body('admin') adminDto: AdminDto): Promise<AdminEntity> {
         return await this.adminService.createAdmin(adminDto);
     }
 
     @Post('login')
+    @UsePipes(new ValidationPipe())
     async adminLogin(@Body('admin') adminLoginDto: AdminLoginDto): Promise<AdminLoginResponseInterface> {
         const admin = await this.adminService.login(adminLoginDto)
 
