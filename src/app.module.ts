@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { AppService } from './app.service';
@@ -7,6 +7,7 @@ import { WorkoutModule } from './workout/workout.module';
 import { AdminModule } from './admin/admin.module';
 import { TrainerModule } from './trainer/trainer.module';
 import config from './ormconfig';
+import { AuthMiddleware } from './admin/middlewares/auth.middleware';
 
 @Module({
     imports: [
@@ -19,4 +20,10 @@ import config from './ormconfig';
     providers: [AppService],
 })
 export class AppModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(AuthMiddleware).forRoutes({
+            path: '*',
+            method: RequestMethod.ALL,
+        });
+    }
 }

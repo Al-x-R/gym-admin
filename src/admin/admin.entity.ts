@@ -3,20 +3,20 @@ import { hash } from 'bcryptjs';
 
 @Entity({name: 'admins'})
 export class AdminEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    adminName: string;
+  @Column()
+  adminName: string;
 
-    @Column()
-    password: string;
+  @Column({select: false})
+  password: string;
 
-    @Column()
-    isSuper: boolean;
+  @Column()
+  isSuper: boolean;
 
-    @BeforeInsert()
-    async hashPassword() {
-        this.password = await hash(this.password, 10);
-    }
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await hash(this.password, 10);
+  }
 }
