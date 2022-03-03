@@ -27,9 +27,7 @@ export class AdminController {
   }
 
   @Get('admin')
-  async getCurrentAdmin(@Req() request: ExpressRequest): Promise<AdminLoginResponseInterface> {
-    console.log('admin', request.admin);
-    // return this.adminService.buildAdminResponse(request.admin)
-    return request.admin as any
+  async getCurrentAdmin(@Req() request: ExpressRequest): Promise<AdminLoginResponseInterface | undefined> {
+    if (request.admin) return this.adminService.buildAdminResponse(request.admin)
   }
 }

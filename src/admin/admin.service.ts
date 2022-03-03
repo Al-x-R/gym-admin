@@ -58,14 +58,13 @@ export class AdminService {
       throw new HttpException(errorResponse, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
-
-      // @ts-ignore //TODO @ts-ignore delete admin.password;
-      delete admin.password;
-      return admin
-    }
+    // @ts-ignore //TODO @ts-ignore delete admin.password;
+    delete admin.password;
+    return admin;
+  }
 
   async findById(id: number): Promise<AdminEntity | undefined> {
-    return await this.adminRepository.findOne(id)
+    return await this.adminRepository.findOne(id);
   }
 
   generateJwt(admin: AdminEntity): string {
