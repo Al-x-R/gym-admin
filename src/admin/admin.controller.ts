@@ -7,6 +7,7 @@ import { AdminLoginDto } from './dto/adminLogin.dto';
 import { AdminLoginResponseInterface } from './types/adminLoginResponse.interface';
 import { Admin } from '../admin/decorators/admin.decorator';
 import { AuthGuard } from '../admin/guards/auth.guard';
+import { SuperAdminGuard } from '../admin/guards/superAdmin.guard';
 
 @Controller()
 export class AdminController {
@@ -14,6 +15,7 @@ export class AdminController {
   }
 
   @Post('admin')
+  @UseGuards(SuperAdminGuard)
   @UsePipes(new ValidationPipe())
   async createAdmin(@Body('admin') adminDto: AdminDto): Promise<AdminEntity> {
     return await this.adminService.createAdmin(adminDto);
