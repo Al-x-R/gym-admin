@@ -1,11 +1,11 @@
-import { Body, Controller, Get, Post, Req, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 
 import { AdminDto } from './dto/admin.dto';
 import { AdminEntity } from './admin.entity';
 import { AdminService } from './admin.service';
 import { AdminLoginDto } from './dto/adminLogin.dto';
 import { AdminLoginResponseInterface } from './types/adminLoginResponse.interface';
-import { ExpressRequest } from '@app/types/expressRequest.interface';
+import { Admin } from '../admin/decorators/admin.decorator';
 
 @Controller()
 export class AdminController {
@@ -27,7 +27,7 @@ export class AdminController {
   }
 
   @Get('admin')
-  async getCurrentAdmin(@Req() request: ExpressRequest): Promise<AdminLoginResponseInterface | undefined> {
-    if (request.admin) return this.adminService.buildAdminResponse(request.admin)
+  async getCurrentAdmin(@Admin() admin: AdminEntity): Promise<AdminLoginResponseInterface | undefined> {
+    return this.adminService.buildAdminResponse(admin);
   }
 }
