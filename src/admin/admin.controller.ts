@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 
 import { AdminDto } from './dto/admin.dto';
 import { AdminEntity } from './admin.entity';
@@ -6,6 +6,7 @@ import { AdminService } from './admin.service';
 import { AdminLoginDto } from './dto/adminLogin.dto';
 import { AdminLoginResponseInterface } from './types/adminLoginResponse.interface';
 import { Admin } from '../admin/decorators/admin.decorator';
+import { AuthGuard } from '../admin/guards/auth.guard';
 
 @Controller()
 export class AdminController {
@@ -27,6 +28,7 @@ export class AdminController {
   }
 
   @Get('admin')
+  @UseGuards(AuthGuard)
   async getCurrentAdmin(@Admin() admin: AdminEntity): Promise<AdminLoginResponseInterface | undefined> {
     return this.adminService.buildAdminResponse(admin);
   }
