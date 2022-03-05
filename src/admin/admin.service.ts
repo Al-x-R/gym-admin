@@ -8,6 +8,7 @@ import { AdminDto } from './dto/admin.dto';
 import { AdminEntity } from './admin.entity';
 import { AdminLoginDto } from './dto/adminLogin.dto';
 import { AdminLoginResponseInterface } from './types/adminLoginResponse.interface';
+import { UpdateAdminDto } from '../admin/dto/updateAdmin.dto';
 
 @Injectable()
 export class AdminService {
@@ -65,6 +66,19 @@ export class AdminService {
 
   async findById(id: number): Promise<AdminEntity | undefined> {
     return await this.adminRepository.findOne(id);
+  }
+
+  async allAdmins(): Promise<any> {
+    return await this.adminRepository.findAndCount();
+  }
+
+  async updateAdmin(updateAdminDto: UpdateAdminDto): Promise<any> {
+    return await this.adminRepository.update({
+      id: updateAdminDto.id
+    }, {
+      adminName: updateAdminDto.adminName,
+      isSuper: updateAdminDto.isSuper,
+    });
   }
 
   generateJwt(admin: AdminEntity): string {
