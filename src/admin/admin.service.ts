@@ -36,7 +36,7 @@ export class AdminService {
   async login(adminLoginDto: AdminLoginDto) {
     const errorResponse = {
       errors: {
-        'email or password': 'is invalid',
+        'message': 'email or password is invalid',
       },
     };
 
