@@ -81,6 +81,15 @@ export class AdminService {
     });
   }
 
+  async deleteAdmin(id: number): Promise<any> {
+    const restoreResponse = await this.adminRepository.delete({id})
+    if (!restoreResponse.affected) {
+      throw new HttpException('admin not found', HttpStatus.NOT_FOUND);
+    }
+
+    return 'Successfully deleted';
+  }
+
   generateJwt(admin: AdminEntity): string {
     return sign(
       {

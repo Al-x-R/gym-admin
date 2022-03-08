@@ -16,6 +16,6 @@ export class SuperAdminGuard {
       return true;
     }
 
-    throw new HttpException('Not authorized', HttpStatus.UNAUTHORIZED);
+    throw new HttpException('No access rights', HttpStatus.UNAUTHORIZED);
   }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 
 import { AdminDto } from './dto/admin.dto';
 import { AdminEntity } from './admin.entity';
@@ -45,5 +45,11 @@ export class AdminController {
   @Get()
   async allAdmins() {
     return this.adminService.allAdmins()
+  }
+
+  @Delete()
+  @UseGuards(SuperAdminGuard)
+  async deleteAdmin(@Body('id') id: number) {
+    return this.adminService.deleteAdmin(id)
   }
 }
