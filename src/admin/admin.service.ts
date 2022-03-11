@@ -69,16 +69,15 @@ export class AdminService {
   }
 
   async allAdmins(): Promise<any> {
-    return await this.adminRepository.findAndCount();
+    return await this.adminRepository.find();
   }
 
   async updateAdmin(updateAdminDto: UpdateAdminDto): Promise<any> {
-    return await this.adminRepository.update({
-      id: updateAdminDto.id
-    }, {
-      adminName: updateAdminDto.adminName,
-      isSuper: updateAdminDto.isSuper,
-    });
+    const admin = this.adminRepository.findOne(updateAdminDto.id)
+    return this.adminRepository.save({
+      ...admin,
+      ...updateAdminDto
+    })
   }
 
   async deleteAdmin(id: number): Promise<any> {
@@ -87,7 +86,7 @@ export class AdminService {
       throw new HttpException('admin not found', HttpStatus.NOT_FOUND);
     }
 
-    return 'Successfully deleted';
+    return {id};
   }
 
   generateJwt(admin: AdminEntity): string {
